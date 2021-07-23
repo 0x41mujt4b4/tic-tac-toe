@@ -2,6 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
+const totalRows = 3
+const squaresPerRow = 3
+
 function calculateWinner(squares) {
   const lines = [
     [0, 1, 2],
@@ -30,6 +33,7 @@ function Square(props) {
   )
 }
 
+
 class Board extends React.Component {
   renderSquare(i) {
     return (<Square
@@ -38,26 +42,29 @@ class Board extends React.Component {
     />
     );
   }
-
-  render() {
+  renderRow(row) {
+    const squares = [];
+    const offset = row * squaresPerRow
+    for (let i = 0; i < squaresPerRow; i++) {
+      squares.push(
+        this.renderSquare(offset + i)
+      );
+    }
     return (
-      <div>
-        <div className="board-row">
-          {this.renderSquare(0)}
-          {this.renderSquare(1)}
-          {this.renderSquare(2)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(3)}
-          {this.renderSquare(4)}
-          {this.renderSquare(5)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(6)}
-          {this.renderSquare(7)}
-          {this.renderSquare(8)}
-        </div>
+      <div className="board-row">
+        {squares}
       </div>
+    )
+  }
+  render() {
+    const rows = [];
+    for (let r = 0; r < totalRows; r++) {
+      rows.push(
+        this.renderRow(r)
+      );
+    }
+    return (
+    <div>{rows}</div>
     );
   }
 }
