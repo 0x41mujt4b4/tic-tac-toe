@@ -6,6 +6,11 @@ body {
   ol, ul {
     padding-left: 30px;
   }
+
+  .board-row {
+    display: flex;
+    flex-shrink: 0;
+  }
   
   .board-row:after {
     clear: both;
@@ -21,15 +26,14 @@ body {
     background: #fff;
     border: 1px solid #999;
     float: left;
-    font-size: 5vh;
+    font-size: 10vh;
     font-weight: bold;
-    /* line-height: 34px; */
-    height: 25vh;
+    height: 14vw;
     margin-right: -1px;
     margin-top: -1px;
     padding: 0;
     text-align: center;
-    width: 25vh;
+    width: 16vw;
   }
   
   .square:focus {
@@ -39,13 +43,15 @@ body {
   .kbd-navigation .square:focus {
     background: #ddd;
   }
+
+  /* .board {
+  } */
   
   .game {
     display: flex;
     justify-content: center;
     flex-direction: column;
     align-items: center;
-    min-height: 100vh;
   }
 
   .game:after {
@@ -60,7 +66,7 @@ body {
   }
 
   .game-info {
-    /* margin: 10px; */
+    margin: 10px;
     padding: 10px;
   }
 
