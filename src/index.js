@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
+import './styles/output.css';
 
 const totalRows = 3
 const squaresPerRow = 3
