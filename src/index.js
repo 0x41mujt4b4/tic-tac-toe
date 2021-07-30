@@ -5,6 +5,10 @@ import './styles/output.css';
 
 const totalRows = 3
 const squaresPerRow = 3
+var win_style = " transition duration-1000 ease-in-out transform -translate-y-1 scale-110"
+const reset_style = "bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded"
+var square_style = ["text-red-600", "bg-gray-100 text-gray-800 font-semibold border border-gray-400 h-32 w-32 sm:h-48 sm:w-48 shadow text-center -mt-px -mr-px text-6xl"]
+
 
 function calculateWinner(squares) {
   const lines = [
@@ -59,7 +63,7 @@ class Game extends React.Component {
         squares: Array(9).fill(null),
         }
       ],
-      style: Array(9).fill('square'),
+      style: Array(9).fill(square_style.join(' ')),
       stepNumber: 0,
       xIsNext: true,
     };
@@ -97,13 +101,17 @@ class Game extends React.Component {
     if (squares[i] || winner) {
       return
     }
-
+    
     squares[i] = this.state.xIsNext ? 'X' : 'O';
+    square_style[0] = this.state.xIsNext ? 'text-red-600' : 'text-blue-600'
     winner = calculateWinner(squares);
     const style = this.state.style.slice()
     if (winner) {
       for (let i of winner) {
-        style[i] = "square highlight"
+        if (this.state.xIsNext)
+          style[i] = square_style + win_style + " bg-red-300"
+        else
+          style[i] = square_style + win_style + " bg-blue-300"
       }
       this.setState({
         history: history.concat([
@@ -113,11 +121,12 @@ class Game extends React.Component {
         ]),
         stepNumber: history.length,
         xIsNext:!this.state.xIsNext,
-        style:style
+        style: style,
       });
       return;
     }
-    
+    console.log(square_style.join(' '))
+    style[i] = square_style.join(' ')
     this.setState({
       history: history.concat([
         {
@@ -125,15 +134,27 @@ class Game extends React.Component {
         }
       ]),
       stepNumber: history.length,
-      xIsNext:!this.state.xIsNext
+      xIsNext:!this.state.xIsNext,
+      style: style,
     });
   }
 
   jumpTo(step) {
+    square_style[0] = this.state.xIsNext ? 'text-red-600' : 'text-blue-600'
+    // this.setState({
+    //   stepNumber: step,
+    //   xIsNext: (step % 2) === 0,
+    // })
     this.setState({
-      stepNumber: step,
-      xIsNext: (step % 2) === 0,
-    });
+      history: [
+        {
+        squares: Array(9).fill(null),
+        }
+      ],
+      style: Array(9).fill(square_style.join(' ')),
+      stepNumber: 0,
+      xIsNext: true,
+    })
   }
 
   render() {
@@ -141,18 +162,18 @@ class Game extends React.Component {
     const current = history[this.state.stepNumber];
     const winner = calculateWinner(current.squares);
 
-    const moves = history.map((step, move) => {
-      const desc = move ?
-      'Go to move #' + move :
-      'Go to game start';
-      return (
-        <li key={move} >
-          <button onClick={() => this.jumpTo(move)}>
-            {desc}
-          </button>
-        </li>
-      );
-    });
+    // const moves = history.map((step, move) => {
+    //   const desc = move ?
+    //   'Go to move #' + move :
+    //   'Go to game start';
+    //   return (
+    //     <li key={move} >
+    //       <button onClick={() => this.jumpTo(move)}>
+    //         {desc}
+    //       </button>
+    //     </li>
+    //   );
+    // });
 
     let status;
     if (winner) {
@@ -162,20 +183,18 @@ class Game extends React.Component {
         status = "Draw!";
       }
       else {
-        status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
+        status = this.state.xIsNext ? <span style={{'color': 'red', 'font-size':'200%'}}>X</span> : <span style={{'color': 'blue', 'font-size':'200%'}}>O</span>;
       }
     }
     return (
-      <div className="game">
-        <div className="game-board">
+      <div className="flex flex-col justify-center items-center h-screen">
+        <div className="text-xl">{status}</div>
+        <div className="border-4 border-white border-opacity-100 border-solid">
           <Board
             renderRow={row => this.renderRow(row)}
             />
         </div>
-        <div className="game-info">
-          <div>{status}</div>
-          <ol>{moves}</ol>
-        </div>
+        <button onClick={() => this.jumpTo(0)} className={reset_style}>Reset</button>
       </div>
     );
   }
